@@ -1,7 +1,8 @@
 import Header from "./components/Header";
-
+import HomeScreen from "./Screens/HomeScreen"
 import Footer from "./components/Footer";
 import {Container} from 'react-bootstrap';
+import {Outlet } from 'react-router-dom';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Header />
       <Container>
         <main>
-          
+          <Outlet />
         </main>
 
       </Container>
