@@ -1,7 +1,34 @@
-import {Link} from 'react-router-dom';
-import {Row,Col,Form,Button} from 'react-bootstrap';
+import {useState} from "react";
+import {Link,useNavigate} from 'react-router-dom';
+import {Row,Col,Form,Button,Alert} from 'react-bootstrap';
+import axios from 'axios';
 
 const ResultLoginPage = ()=>{
+    const[registerInput, setRegisterInput]=useState("")
+    const[error, setError]=useState("")
+
+    const navigate= useNavigate()
+   
+
+    const submitHandler = (e)=>{
+        e.preventDefault()
+          if(registerInput=== ""){
+            setError('Please Enterregister id')
+          }else {
+            axios.get("http://localhost:3002/studentInfo")
+            .then((response) =>{
+              console.log("res:",response.data)
+              response.data.map((data,index) =>
+              {
+                if(data.registerId=== registerInput){
+                  navigate(`/resultpage/${registerInput}`)
+                }else{
+                  setError('Invalid RegisterId')
+                }
+              })
+          })
+          } 
+    }
     return(
         <>
              <Link to='/' className='btn btn-dark' style={{marginTop:"1rem"}}>Go Back</Link>
@@ -15,14 +42,18 @@ const ResultLoginPage = ()=>{
 
                 <Col></Col>
                     <Col style={{marginLeft:'-20rem'}}>
-                     <Form>
+                     <Form onSubmit={(e) => submitHandler(e)}>
                         <Form.Label >Enter your Register No:</Form.Label><br/>
                         <Form.Control type='text' placeholder='Enter Your register no'
-                        style={{width:'70%'}}/>
+                        style={{width:'70%'}} value={registerInput}  onChange={(e)=>setRegisterInput(e.target.value)}/>
                         
                         <Button type="submit" style={{marginTop:"1rem"}}>Submit</Button>
                      </Form>
+                         
                      </Col>
+             </Row>
+             <Row className="justify-content-center my-3">
+                      {error ? <Alert variant="danger">{error}</Alert>: ""}
              </Row>
         </>
     )

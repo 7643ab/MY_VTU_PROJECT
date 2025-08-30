@@ -1,7 +1,30 @@
 import {Row,Col,Form} from 'react-bootstrap';
 import TableData from './TableData';
+import axios from "axios";
+import { useState,useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ResultPage=()=>{
+
+        const[studentDetails,setStudentDetails]=useState([]);
+
+        const value = useParams()
+
+        useEffect(() =>{
+            axios.get("http://localhost:3002/studentInfo")
+            .then((response)=>{
+                response.data.map((data)=>{
+                    if(data.registerId === value.id){
+                        setStudentDetails(data)
+                    }
+                })
+            })
+        },[])
+
+        console.log("state:",studentDetails)
+
+
+
     return(
         <>
         <Row className='justify-content-center my-5'>
@@ -14,22 +37,23 @@ const ResultPage=()=>{
             <Col sm={12} md={6}>
              <Form.Group>
                 <Form.Label > Student Name:</Form.Label>
-                 <Form.Label style={{marginLeft:'4.5rem'}}>Mohan J</Form.Label><br/>
-                  <Form.Label>Father's/Mothers' Name:</Form.Label>
-                   <Form.Label style={{marginLeft:'0.5rem'}}>Sukumar Jagur</Form.Label><br/>
-                    <Form.Label>Collage Name:</Form.Label>
-                     <Form.Label style={{marginLeft:'4.5rem'}}>Delhi University</Form.Label>
+                <Form.Label style={{marginLeft:'4.5rem'}}>{studentDetails.studentName}</Form.Label><br/>
+                <Form.Label>Father's/Mothers' Name:</Form.Label>
+                <Form.Label style={{marginLeft:'0.5rem'}}>{studentDetails.FatherName}</Form.Label><br/>
+                <Form.Label>Collage Name:</Form.Label>
+                <Form.Label style={{marginLeft:'4.5rem'}}>{studentDetails.collegeName}</Form.Label>
              </Form.Group>
+
             </Col>
              <Col sm={12} md={6} >
             <Form.Group>
-                 <Form.Label style={{float:"right"}}>Register No: 209VTU3513</Form.Label>
+                 <Form.Label style={{float:"right"}}>Register No: {studentDetails.registerId}</Form.Label>
                  
             </Form.Group>
             </Col>
         </Row>
         <Row>
-            <TableData />
+            <TableData  studentId = {studentDetails.registerId}/>
         </Row>
         
         </>

@@ -10,4 +10,4 @@ import React from 'react';
     )
  }
 
- export default AboutUs
+ export default AboutUs;
